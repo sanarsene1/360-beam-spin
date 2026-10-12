@@ -8,3 +8,6 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Keep manufacturer product media in imported Lovable Assets pointer files, separate from presentation logic, so authenticity and attribution remain traceable.
+- Only enable full-rotation controls for a verified complete spin sequence or a faithful sourced model; sparse manufacturer photographs remain a labeled gallery to avoid implying fabricated views.
