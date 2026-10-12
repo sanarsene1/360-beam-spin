@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { ArrowLeft, ArrowRight, CheckCircle2, ChevronRight, ExternalLink, Info, Maximize, Minimize } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { litebeamViews, nextViewIndex } from '@/lib/litebeam-media'
@@ -26,6 +26,11 @@ function Index() {
   const viewer = useRef<HTMLDivElement>(null)
   const pointerStart = useRef<number | null>(null)
   const image = litebeamViews[index] ?? litebeamViews[0]
+  useEffect(() => {
+    const handleChange = () => setExpanded(Boolean(document.fullscreenElement))
+    document.addEventListener('fullscreenchange', handleChange)
+    return () => document.removeEventListener('fullscreenchange', handleChange)
+  }, [])
   const selectView = (value: number) => { setIndex(value); setImageError(false) }
   const step = (direction: number) => selectView(nextViewIndex(index, direction, litebeamViews.length))
   const toggleFullscreen = async () => {
@@ -34,6 +39,8 @@ function Index() {
       else if (viewer.current) await viewer.current.requestFullscreen()
     } catch { setFullscreenError(true) }
   }
+
+  if (!image) return <main className="studio-content">Aucune vue disponible.</main>
 
   return (
     <div className="studio-page">
@@ -53,7 +60,6 @@ function Index() {
           role="region"
           aria-label="Vues officielles du LiteBeam"
           tabIndex={0}
-          onFullscreenChange={() => setExpanded(Boolean(document.fullscreenElement))}
           onKeyDown={event => {
             if (event.key === 'ArrowRight') { event.preventDefault(); step(1) }
             if (event.key === 'ArrowLeft') { event.preventDefault(); step(-1) }
